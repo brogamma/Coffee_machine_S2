@@ -1,7 +1,6 @@
 //standard c-libaries that are needed to run the subsystems of the state_machine
 #include <iostream>
 #include <fstream>
-#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -11,114 +10,151 @@
 #include "display.h"
 #include "display.cpp"
 
+using std::cout;
+using std::cin;
 
-
+Declares dec;
+subsystems sub;
+display disp;
 /***************************** Methods and Functions**************************************/
 void money_start(void)
 {
-    insertedMoney = 0;//sets the ammount of money at the start to 0
+    dec.setInsertedMoney(0);//sets the ammount of money at the start to 0
 }
 
 
 void Coffee_init(void)//Method that prepares the machine to start working
 {
-    Change_Dispensed=0;
-    Money_Recieved=0;
+    dec.setChange_Dispensed(0);
+    dec.setMoney_Recieved(0);
 
     //init methodes that prepare the machine
-    display_initialise();
-    keyboard_initialise();
-    dispenser_initialise();
-    change_dispenser_initialise();
+    disp.dispenser_initialise();
+    disp.keyboard_initialise();
+    disp.dispenser_initialise();
+    disp.change_dispenser_initialise();
     //startline of the display
-    display_show("----------------------- Coffee Vending Machine--------------------------");
+    disp.display_show("----------------------- Coffee Vending Machine--------------------------");
 }
 
 void password_verifying(void)//verifies the password
 {
 
     do{
-        cin >> password;
+    unsigned int pas;
+    cin >> pas;
+    dec.setPassword_enter(pas);
 
-    }while ((strcmp(password,"1234"))!=0);
+    }while ((dec.getPassword_enter()== dec.getPasswordset())!=0);
 }
 
 void Password_reset(unsigned int new_password)
 {
-    password[0] = &new_password;
+    dec.setPasswordset(new_password);
 }
 
 void report_writing()//Starts the logging for the maintainance
 {
-    FILE *fptr;
-    fptr = fopen("D:\\HAN projects\\QT_projects 2017-2018 blok1\\Coffee_Machine_revised\\Report.txt","w");
+    std::ofstream Outfile;
+    Outfile.open("Report.txt");
 
-    if (fptr == 0)
-    {
-        printf("Error--file not available.\n");
-        exit(1);
-    }
     //writes all the nessacery files to the .txt file
-    ofstream << "\nThe total dispensed amount of change is:%d.\n" << Change_Dispensed;
-    ofstream << "\nThe total amount of inserted money is:%d.\n" << Money_Recieved;
-    ofstream << "\nThe total amount of profit is:%d.\n" << Money_Recieved - Change_Dispensed;
-    ofstream << "\nThe amount of change still available is:%d\n" << ChangeLeft;
-    ofstream << "\nThe amount of Cuppuccino still availble is:%d\n"<<  Cappuccino_amount;
-    ofstream << "\nThe amount of Macchiato still availble is:%d\n"<< Macchiato_ammount;
-    ofstream << "\nThe amount of Normal coffee still availble is:%d\n"<< Coffee_Ammount;
-    ofstream << "\nThe password is: 1234\n";
-    fclose(fptr);
+    Outfile << "\nThe total amount of inserted money is:" << dec.getMoney_Recieved();
+    Outfile << "\nThe total amount of profit is:" << dec.getMoney_Recieved() - dec.getChange_Dispensed();
+    Outfile << "\nThe amount of change still available is:" << dec.getChangeLeft();
+    Outfile << "\nThe amount of Cuppuccino still availble is:"<<  dec.getCappuccino_amount();
+    Outfile << "\nThe amount of Macchiato still availble is:"<< dec.getMacchiato_ammount();
+    Outfile << "\nThe amount of Normal coffee still availble is:"<< dec.getCoffee_Ammount();
+    Outfile.close();
 
 }
 
-void Fill(unsigned int *amount_type)//void function that fills up the Machine
+void Fill_Money(int *amount)
 {
-    unsigned int amount;
-    scanf("%d",&amount);
-    getchar();
-    *amount_type += amount;
+    dec.setChange(dec.getChangeLeft()+*amount);
+}
+
+void Fill(char kind,unsigned int amount)//void function that fills up the Machine
+{
+    int amountfilled;
+    switch (kind) {
+    case 'A':
+        amountfilled = amount + dec.getCappuccino_amount();
+        if(amountfilled <= 0)
+        {
+            cout << "The Amount of Cappucino that is in the system is low.\n";
+            cout <<  "Please add some more to let the machine work. The machine will order 50 Grams of Cappucino also\n";
+        }
+        dec.setCappuccino_amount(amountfilled);
+        break;
+    case 'B':
+        amountfilled = amount + dec.getCoffee_Ammount();
+        if(amountfilled <= 0)
+        {
+            cout << "The Amount of Coffee that is in the system is low.\n";
+            cout << "Please add some more to let the machine work. The machine will order 50 Grams of cofffe also\n";
+        }
+        dec.setCoffee_Ammount(amountfilled);
+        break;
+    case 'C':
+        amountfilled = amount + dec.getMacchiato_ammount();
+        {
+            cout << "The Amount of Coffee that is in the system is low.\n";
+            cout << "Please add some more to let the machine work. The machine will order 50 Grams of cofffe also\n";
+        }
+        dec.setMacchiato_ammount(amountfilled);
+        break;
+    default:
+        break;
+    }
 }
 
 void menu_filling(void)//void method that displays a menu to fill up the machine with new bevrages
 {
+    char Fill_Select;
+    unsigned int amount;
     //displays a menu for filling
     puts("\nWhat type of coffee that you want to fill?");
-    puts("Press c for Cappuccino.");
-    puts("Press n for Normal coffee.");
-    puts("Press m for Macchiato.");
-    cin >> &Fill_Select;
+    puts("Press 1 for Cappuccino.");
+    puts("Press 2 for Normal coffee.");
+    puts("Press 3 for Macchiato.");
+    cin >> Fill_Select;
     getchar();
 
     switch (Fill_Select){
     //case 'c' is for filling the Cappuccino
-    case 'c': cout << "Enter the amount of Cappuccino that you have filled(in grams):";
-        Fill(&Cappuccino_amount);
+    case '1': cout << "Enter the amount of Cappuccino that you have filled(in grams):";
+        cin >> amount;
+        Fill('A',amount);
         break;
         //case 'n' is for filling the Normall Cofeve
-    case 'n': cout << "Enter the amount of Normal coffee that you have filled(in grams):";
-        Fill(&Coffee_Ammount);
+    case '2': cout << "Enter the amount of Normal coffee that you have filled(in grams):";
+        cin >> amount;
+        Fill('B',amount);
         break;
         //case 'm' is for filling the Macchiato
-    case 'm': cout << "Enter the amount of Macchiato that you have filled(in grams):";
-        Fill(&Macchiato_ammount);
+    case '3': cout << "Enter the amount of Macchiato that you have filled(in grams):";
+        cin >> amount;
+        Fill('C',amount);
         break;
 
     default: //default output
-        puts("Wrong Selection");
+        cout << "Wrong Selection";
     }
 }
 
-void dispense_coffee(const int *money)//a void method that dispenses the bevrage
+void dispense_coffee(const int *money, unsigned int moneybevrage)//a void method that dispenses the bevrage
 {
-    Money_Recieved+=*money;
+    dec.setMoney_Recieved(dec.getMoney_Recieved()+*money);
     cout << "\nEnough Money!(%d)Thanks!"<< *money;
-    cout << "\nYour Change is:%d cent"<< *money-cost_bevrage;
+    cout << "\nYour Change is:%d cent"<< *money-moneybevrage;
     cout << "\nTake your Coffee!\n\n\n";
     sleep(1);
 }
 
 void service_machine()//method that starts up a reviceing programm for the machine
 {
+    int number;
     //startup for maintainance
     password_verifying();
     cout << "\n\n##Service Menu##\n";
@@ -130,22 +166,24 @@ void service_machine()//method that starts up a reviceing programm for the machi
     cout << "Press:2, to fill change.";
     cout << "Press:3, to go back to the main menu.";
     cout << "Press:4, to restart(Report Writing).";
-    cout << "%d" << &Service_Sel;
-    getchar();
+    cin >> number;
+    dec.setService_Sel(number);
 
-    switch(Service_Sel)
+    switch(dec.getService_Sel())
     {
     case 1:
         menu_filling();
         break;
 
     case 2://refills the change of the machine
+        int amount_money_filled;
         cout << "Enter the amount of change that you have filled (in cent):";
-        Fill(&ChangeLeft);
+        cin >> amount_money_filled ;
+        Fill_Money(&amount_money_filled);
         break;
 
     case 3://returns to startmenu
-        next_state= S_INITIALISED;
+        dec.next_state= dec.S_INITIALISED;
         break;
 
     case 4://writes a report for the
@@ -153,7 +191,7 @@ void service_machine()//method that starts up a reviceing programm for the machi
         report_writing();
         cout << "Restrating.......\n";
         fflush(stdin);
-        return next_state= S_START;
+        dec.next_state = dec.S_START;
         break;
         /* case 5:
       puts("Type in new password:\n");
@@ -162,40 +200,40 @@ void service_machine()//method that starts up a reviceing programm for the machi
       break;*/
 
     default: //if there is no valid input, returns a default
-        puts("Wrong Selection");
+        cout << "Wrong Selection";
     }
 }
 
-int subtracting_amount(unsigned int *type) // method that reduces the emptys the machine with ammounts of 10
+void subtracting_amount(unsigned int *type) // method that reduces the emptys the machine with ammounts of 10
 {
     switch(*type){
-    case (0): Coffee_Ammount-=10;
+    case (0): dec.setCoffee_Ammount(dec.getCoffee_Ammount()-10);
         break;
-    case (1): Cappuccino_amount-=10;
+    case (1): dec.setCappuccino_amount(dec.getCappuccino_amount()-10);
         break;
-    case (2): Macchiato_ammount-=10;
+    case (2): dec.setMacchiato_ammount(dec.getMacchiato_ammount()-10);
         break;
     }
 }
 
 /**********************************EVENTS******************************/
 
-event_t check_amount(unsigned int *type)//Event that checks the amount of bevrages in the machine
+subsystems::event_t check_amount(unsigned int *type)//Event that checks the amount of bevrages in the machine
 {
     if(*type=0)//if the ammount of the bevarge is empty it will return a fault
     {
         cout<< "\nSorry,there is not enough coffee of this type\n";
         cout<< "Please select anothor type\n";
-        next_state = S_COFFEE_SELECTION;
+        dec.next_state = dec.S_COFFEE_SELECTION;
     }
 
     else
     {
-        next_state = S_WAIT_FOR_COINS;
+        dec.next_state = dec.S_WAIT_FOR_COINS;
     }
 }
 
-event_t check_cents(unsigned int coinValue)//event that checks if the amount of money is enough to buy the bevrage
+event_t subsystems::check_cents(unsigned int coinValue)//event that checks if the amount of money is enough to buy the bevrage
 {
     insertedMoney += coinValue;
     if (insertedMoney >= cost_bevrage)
@@ -271,18 +309,19 @@ event_t coin_insertion()//event for adding the money into the machine
         switch(input_money)
         {
         case 1:
-            return E_10C;
+            return dec.E_10C;
             break;
         case 2:
-            return E_20C;
+            return dec.E_20C;
             break;
         case 3:
-            return E_50C;
+            return dec.E_50C;
+            break;
         case 4:
-            return E_100C;
+            return dec.E_100C;
             break;
         case 5:
-            return E_BACK;
+            return dec.E_BACK;
             break;
 
         default:
@@ -292,39 +331,40 @@ event_t coin_insertion()//event for adding the money into the machine
 }
 
 // start of the machine itself
-state_t event_handler(event_t event)
+event_t event_handler(event)
 {
-    static state_t state = S_START;
-    unsigned int price_Cappuccino= 110 ;
-    unsigned int price_Macchiato= 90;
-    unsigned int price_Normal_Coffee= 60;
-    Macchiato_ammount=10;
-    Cappuccino_amount=10;
-    Coffee_Ammount=10;
-    ChangeLeft=100;
+    static state_t state = dec.S_START;
+
+    dec.setPrice_Cappuccino(110);
+    dec.setPrice_Macchiato(90);
+    dec.setPrice_Normal_Coffee(60);
+    dec.setMacchiato_ammount(10);
+    dec.setCappuccino_amount(10);
+    dec.Coffee_Ammount(10);
+    dec.setChangeLeft(100);
 
 
     while (1){
         // ********************************Switch for States ********************************//
         switch(state){
 
-        case S_START:
+        case dec.S_START:
             switch(event){
-            case E_START:
+            case dec.E_START:
                 Coffee_init();
-                next_state = S_INITIALISED;
+                next_state = dec.S_INITIALISED;
                 break;
             }
             break;
-        case S_INITIALISED:
+        case dec.S_INITIALISED:
             switch(event){
-            case E_CONTINUE:
-                next_state = S_COFFEE_SELECTION;
+            case dec.E_CONTINUE:
+                next_state = dec.S_COFFEE_SELECTION;
                 break;
             }
             break;
 
-        case S_COFFEE_SELECTION:
+        case dec.S_COFFEE_SELECTION:
             switch(event){
             case E_MACCHIATO:
                 printf("You have chosen #Macchiato#!");

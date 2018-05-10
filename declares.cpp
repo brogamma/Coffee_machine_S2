@@ -10,12 +10,12 @@ void Declares::setService_Sel(int value)
     Service_Sel = value;
 }
 
-int Declares::getPasswordset() const
+unsigned int Declares::getPasswordset() const
 {
     return passwordset;
 }
 
-void Declares::setPasswordset(int value)
+void Declares::setPasswordset(unsigned int value)
 {
     passwordset = value;
 }
@@ -88,6 +88,66 @@ char Declares::getFill_Select() const
 void Declares::setFill_Select(char value)
 {
     Fill_Select = value;
+}
+
+unsigned int Declares::getInsertedMoney() const
+{
+    return insertedMoney;
+}
+
+void Declares::setInsertedMoney(unsigned int value)
+{
+    insertedMoney = value;
+}
+
+unsigned int Declares::getChange_Dispensed() const
+{
+    return Change_Dispensed;
+}
+
+void Declares::setChange_Dispensed(unsigned int value)
+{
+    Change_Dispensed = value;
+}
+
+unsigned int Declares::getPrice_Cappuccino() const
+{
+    return price_Cappuccino;
+}
+
+void Declares::setPrice_Cappuccino(unsigned int value)
+{
+    price_Cappuccino = value;
+}
+
+unsigned int Declares::getPrice_Macchiato() const
+{
+    return price_Macchiato;
+}
+
+void Declares::setPrice_Macchiato(unsigned int value)
+{
+    price_Macchiato = value;
+}
+
+unsigned int Declares::getPrice_Normal_Coffee() const
+{
+    return price_Normal_Coffee;
+}
+
+void Declares::setPrice_Normal_Coffee(unsigned int value)
+{
+    price_Normal_Coffee = value;
+}
+
+unsigned int Declares::getPassword_enter() const
+{
+    return password_enter;
+}
+
+void Declares::setPassword_enter(unsigned int value)
+{
+    password_enter = value;
 }
 
 int Declares::getChange() const

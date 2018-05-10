@@ -6,11 +6,12 @@
 #include "declares.h"
 #include "subsystems.cpp"
 
+Declares declare;
 
 //******************Main program**************//
 int main()
 {
-   event_handler(E_START);
+   event_handler(declare.E_START);
 
 return 0;
 }

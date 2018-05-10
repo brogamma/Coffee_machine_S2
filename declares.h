@@ -9,14 +9,18 @@ private:
     /*interger variables*/
     int change;
     int Service_Sel;
-    int passwordset;
     int Kind_Bevrage;
 
     /*Unsigned variables*/
+    unsigned int password_enter;
+    unsigned int passwordset;
     unsigned int insertedMoney;
     unsigned int cost_bevrage;
     unsigned int Change_Dispensed;
     unsigned int password[1];
+    unsigned int price_Cappuccino;
+    unsigned int price_Macchiato;
+    unsigned int price_Normal_Coffee;
 
     /*Static variables*/
     static unsigned int Money_Recieved;
@@ -68,15 +72,19 @@ public:
     /*********************Getters and setters************************/
     int getChange() const;
     int getService_Sel() const;
-    int getPasswordset() const;
     int getKind_Bevrage() const;
     char getFill_Select() const;
+    unsigned int getChange_Dispensed() const;
+    unsigned int getInsertedMoney() const;
+    unsigned int getPasswordset() const;
 
     void setKind_Bevrage(int value);
     void setFill_Select(char value);
-    void setPasswordset(int value);
+    void setPasswordset(unsigned int value);
     void setService_Sel(int value);
     void setChange(int value);
+    void setInsertedMoney(unsigned int value);
+    void setChange_Dispensed(unsigned int value);
 
     static unsigned int getMoney_Recieved();
     static int getChangeLeft();
@@ -89,6 +97,14 @@ public:
     static void setCappuccino_amount(int value);
     static void setCoffee_Ammount(int value);
     static void setChangeLeft(int value);
+    unsigned int getPrice_Cappuccino() const;
+    void setPrice_Cappuccino(unsigned int value);
+    unsigned int getPrice_Macchiato() const;
+    void setPrice_Macchiato(unsigned int value);
+    unsigned int getPrice_Normal_Coffee() const;
+    void setPrice_Normal_Coffee(unsigned int value);
+    unsigned int getPassword_enter() const;
+    void setPassword_enter(unsigned int value);
 };
 
 #endif // DECLARES_H
