@@ -14,13 +14,13 @@ private:
     /*Unsigned variables*/
     unsigned int password_enter;
     unsigned int passwordset;
-    unsigned int insertedMoney;
     unsigned int cost_bevrage;
     unsigned int Change_Dispensed;
     unsigned int password[1];
     unsigned int price_Cappuccino;
     unsigned int price_Macchiato;
     unsigned int price_Normal_Coffee;
+    unsigned int insertedMoney;
 
     /*Static variables*/
     static unsigned int Money_Recieved;
@@ -75,8 +75,10 @@ public:
     int getKind_Bevrage() const;
     char getFill_Select() const;
     unsigned int getChange_Dispensed() const;
-    unsigned int getInsertedMoney() const;
     unsigned int getPasswordset() const;
+    unsigned int getPricebevrage(unsigned int input) const;
+    unsigned int getPassword_enter() const;
+    unsigned int getInsertedMoney() const;
 
     void setKind_Bevrage(int value);
     void setFill_Select(char value);
@@ -85,6 +87,10 @@ public:
     void setChange(int value);
     void setInsertedMoney(unsigned int value);
     void setChange_Dispensed(unsigned int value);
+    void setPrice_Cappuccino(unsigned int value);
+    void setPrice_Macchiato(unsigned int value);
+    void setPrice_Normal_Coffee(unsigned int value);
+    void setPassword_enter(unsigned int value);
 
     static unsigned int getMoney_Recieved();
     static int getChangeLeft();
@@ -97,14 +103,8 @@ public:
     static void setCappuccino_amount(int value);
     static void setCoffee_Ammount(int value);
     static void setChangeLeft(int value);
-    unsigned int getPrice_Cappuccino() const;
-    void setPrice_Cappuccino(unsigned int value);
-    unsigned int getPrice_Macchiato() const;
-    void setPrice_Macchiato(unsigned int value);
-    unsigned int getPrice_Normal_Coffee() const;
-    void setPrice_Normal_Coffee(unsigned int value);
-    unsigned int getPassword_enter() const;
-    void setPassword_enter(unsigned int value);
+
+
 };
 
 #endif // DECLARES_H

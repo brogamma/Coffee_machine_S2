@@ -14,18 +14,18 @@ void money_start(void);
 void Fill(unsigned int *amount_type);
 void menu_filling(void);
 void report_writing();
-void dispense_coffee(const int *money);
+void dispense_coffee(const unsigned int *money, unsigned int moneybevrage);
 void service(void);
 void Coffee_init(void);
 
 int subtracting_amount(unsigned int *type);
+int check_change(void);
+int coffee_selection(void);
+int coin_insertion();
+int event_handler(int event);
+int check_cents(unsigned int coinValue);
 
-state_t event_handler(event_t event);
-event_t check_amount(unsigned int *type);
-event_t check_cents(unsigned int coinValue);
-event_t coin_insertion();
-event_t coffee_selection();
-event_t check_change(void);
+void check_amount(unsigned int *type);
 
 };
 #endif // SUBSYSTEMS_H

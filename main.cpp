@@ -4,9 +4,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "declares.h"
-#include "subsystems.cpp"
+#include "subsystems.h"
 
 Declares declare;
+subsystems subs;
 
 //******************Main program**************//
 int main()

@@ -12,6 +12,7 @@
 
 using std::cout;
 using std::cin;
+using std::endl;
 
 Declares dec;
 subsystems sub;
@@ -53,7 +54,7 @@ void Password_reset(unsigned int new_password)
     dec.setPasswordset(new_password);
 }
 
-void report_writing()//Starts the logging for the maintainance
+void report_writing(void)//Starts the logging for the maintainance
 {
     std::ofstream Outfile;
     Outfile.open("Report.txt");
@@ -143,29 +144,30 @@ void menu_filling(void)//void method that displays a menu to fill up the machine
     }
 }
 
-void dispense_coffee(const int *money, unsigned int moneybevrage)//a void method that dispenses the bevrage
+void dispense_coffee(unsigned int money, unsigned int moneybevrage)//a void method that dispenses the bevrage
 {
-    dec.setMoney_Recieved(dec.getMoney_Recieved()+*money);
-    cout << "\nEnough Money!(%d)Thanks!"<< *money;
-    cout << "\nYour Change is:%d cent"<< *money-moneybevrage;
+    dec.setMoney_Recieved(dec.getMoney_Recieved()+ money);
+    cout << "\nEnough Money!(%d)Thanks!"<< money;
+    cout << "\nYour Change is:%d cent"<< money-moneybevrage;
     cout << "\nTake your Coffee!\n\n\n";
     sleep(1);
 }
 
-void service_machine()//method that starts up a reviceing programm for the machine
+void service_machine(void)//method that starts up a reviceing programm for the machine
 {
     int number;
     //startup for maintainance
     password_verifying();
-    cout << "\n\n##Service Menu##\n";
-    cout << "What would you like to do?";
-    cout << "Select your choice:";
+    cout << "##Service Menu##\n" << endl;
+    cout << "What would you like to do?"<<endl;
+    cout << "Select your choice:"<<endl;
 
     //Menu for maintainance
-    cout << "Press:1, to fill coffee.";
-    cout << "Press:2, to fill change.";
-    cout << "Press:3, to go back to the main menu.";
-    cout << "Press:4, to restart(Report Writing).";
+    cout << "Press:1, to fill coffee."<<endl;
+    cout << "Press:2, to fill change."<<endl;
+    cout << "Press:3, to go back to the main menu."<<endl;
+    cout << "Press:4, to restart(Report Writing)."<<endl;
+    /*cout <<"Press:5 to reset the password."<<endl*/
     cin >> number;
     dec.setService_Sel(number);
 
@@ -204,9 +206,9 @@ void service_machine()//method that starts up a reviceing programm for the machi
     }
 }
 
-void subtracting_amount(unsigned int *type) // method that reduces the emptys the machine with ammounts of 10
+void subtracting_amount(unsigned int type) // method that reduces the emptys the machine with ammounts of 10
 {
-    switch(*type){
+    switch(type){
     case (0): dec.setCoffee_Ammount(dec.getCoffee_Ammount()-10);
         break;
     case (1): dec.setCappuccino_amount(dec.getCappuccino_amount()-10);
@@ -218,12 +220,12 @@ void subtracting_amount(unsigned int *type) // method that reduces the emptys th
 
 /**********************************EVENTS******************************/
 
-subsystems::event_t check_amount(unsigned int *type)//Event that checks the amount of bevrages in the machine
+void check_amount(unsigned int type)//Event that checks the amount of bevrages in the machine
 {
-    if(*type=0)//if the ammount of the bevarge is empty it will return a fault
+    if(type == 0)//if the ammount of the bevarge is empty it will return a fault
     {
-        cout<< "\nSorry,there is not enough coffee of this type\n";
-        cout<< "Please select anothor type\n";
+        cout<< "\nSorry,there is not enough coffee of this type" <<endl;
+        cout<< "Please select anothor type" << endl;
         dec.next_state = dec.S_COFFEE_SELECTION;
     }
 
@@ -233,37 +235,27 @@ subsystems::event_t check_amount(unsigned int *type)//Event that checks the amou
     }
 }
 
-event_t subsystems::check_cents(unsigned int coinValue)//event that checks if the amount of money is enough to buy the bevrage
+int check_cents(unsigned int coinValue)//event that checks if the amount of money is enough to buy the bevrage
 {
-    insertedMoney += coinValue;
-    if (insertedMoney >= cost_bevrage)
-    {
-        return E_ENOUGH;
-    }
-
-    else
-    {
-        return E_NOT_ENOUGH;
-    }
+    dec.setInsertedMoney(dec.getInsertedMoney()+ coinValue);
 }
 
-event_t check_change(void)//checks if there is enough changed
+int check_change(void)//checks if there is enough changed
 {
-    change = insertedMoney - cost_bevrage;
-    if (ChangeLeft >= change)
+    dec.setChange( dec.getInsertedMoney() - dec.getPricebevrage(dec.getKind_Bevrage()));
+    if (dec.getChangeLeft() >= dec.getChange())
     {
-        ChangeLeft -= change;
-        Change_Dispensed += change;
-        return E_ENOUGH_CHANGE;
+        dec.setChangeLeft(dec.getChangeLeft() - dec.getChange());
+        dec.setChange_Dispensed(dec.getChange_Dispensed() + dec.getChange());
+        return dec.E_ENOUGH_CHANGE;
     }
-    return E_NOT_ENOUGH_CHANGE;
+    return dec.E_NOT_ENOUGH_CHANGE;
 }
-event_t coffee_selection()//event that select the bevrage that is wanted
+int coffee_selection()//event that select the bevrage that is wanted
 {
     unsigned int bevrage_select;
     while(1){
         puts("\n\n##Select your bevrage##");
-
         puts("1-- MACCHIATO       price: 90 cent ");
         puts("2-- NORMAL COFFEE   price: 60  cent ");
         puts("3-- CAPPUCCINO      price: 110  cent ");
@@ -274,35 +266,38 @@ event_t coffee_selection()//event that select the bevrage that is wanted
         switch(bevrage_select)
         {
         case 1:
-            return E_MACCHIATO;
+            dec.setKind_Bevrage(1);
+            return dec.E_MACCHIATO;
             break;
         case 2:
-            return E_NORMAL_COFFEE;
+            dec.setKind_Bevrage(2);
+            return dec.E_NORMAL_COFFEE;
             break;
         case 3:
-            return E_CUPPUCCINO;
+            dec.setKind_Bevrage(0);
+            return dec.E_CUPPUCCINO;
             break;
         case 4:
-            return E_SERVICE;
+            return dec.E_SERVICE;
             break;
         default:
-            puts("Wrong Selection");
+            cout << "Wrong Selection" << endl;
 
         }
     }
 }
 
-event_t coin_insertion()//event for adding the money into the machine
+int coin_insertion()//event for adding the money into the machine
 {
     unsigned int input_money;
     while(1)
     {
-        puts("##Select your input##");
-        puts("1-- 10 Cent");
-        puts("2-- 20 Cent");
-        puts("3-- 50 Cent");
-        puts("4-- 100 Cent");
-        puts("5-- Main Menu");
+        cout << "##Select your input##" << endl;
+        cout << "1-- 10 Cent" << endl;
+        cout << "2-- 20 Cent" << endl;
+        cout << "3-- 50 Cent" << endl;
+        cout << "4-- 100 Cent" << endl;
+        cout << "5-- Main Menu" << endl;
         scanf("%d", &input_money);
         getchar();
 
@@ -325,22 +320,22 @@ event_t coin_insertion()//event for adding the money into the machine
             break;
 
         default:
-            puts("Wrong Selection");
+            cout << "Wrong Selection"<< endl;
         }
     }
 }
 
 // start of the machine itself
-event_t event_handler(event)
+int event_handler(int event)
 {
-    static state_t state = dec.S_START;
+    static int state = dec.S_START;
 
     dec.setPrice_Cappuccino(110);
     dec.setPrice_Macchiato(90);
     dec.setPrice_Normal_Coffee(60);
     dec.setMacchiato_ammount(10);
     dec.setCappuccino_amount(10);
-    dec.Coffee_Ammount(10);
+    //dec.Coffee_Ammount(10);
     dec.setChangeLeft(100);
 
 
@@ -352,225 +347,220 @@ event_t event_handler(event)
             switch(event){
             case dec.E_START:
                 Coffee_init();
-                next_state = dec.S_INITIALISED;
+                dec.next_state = dec.S_INITIALISED;
                 break;
             }
             break;
         case dec.S_INITIALISED:
             switch(event){
             case dec.E_CONTINUE:
-                next_state = dec.S_COFFEE_SELECTION;
+                dec.next_state = dec.S_COFFEE_SELECTION;
                 break;
             }
             break;
 
         case dec.S_COFFEE_SELECTION:
             switch(event){
-            case E_MACCHIATO:
-                printf("You have chosen #Macchiato#!");
-                cost_bevrage= price_Macchiato;
-                check_amount(&Macchiato_ammount);
-                Kind_Bevrage= 2;
+            case dec.E_MACCHIATO:
+                cout << "You have chosen #Macchiato#!";
+                check_amount(dec.getMacchiato_ammount());
+                dec.setKind_Bevrage(2);
                 break;
 
-            case E_NORMAL_COFFEE:
-                printf("You have chosen #Normal coffee#!");
-                cost_bevrage= price_Normal_Coffee;
-                check_amount(&Coffee_Ammount);
-                Kind_Bevrage=0;
+            case dec.E_NORMAL_COFFEE:
+                cout << "You have chosen #Normal coffee#!";
+                check_amount(dec.getCoffee_Ammount());
+                dec.setKind_Bevrage(0);
                 break;
 
-            case E_CUPPUCCINO:
-                printf("You have chosen #Cuppuccino#!");
-                cost_bevrage =price_Cappuccino;
-                check_amount(&Cappuccino_amount);
-                Kind_Bevrage= 1;
+            case dec.E_CUPPUCCINO:
+                cout << "You have chosen #Cuppuccino#!";
+                check_amount(dec.getCappuccino_amount());
+                dec.setKind_Bevrage(1);
                 break;
 
-            case E_SERVICE:
-                puts("You have chosen #Service#!");
-                puts("Please insert your password:");
+            case dec.E_SERVICE:
+                cout << "You have chosen #Service#!"<< endl;
+                cout << "Please insert your password:"<< endl;
                 service_machine();
             }
             break;//end of state selection
 
-        case S_WAIT_FOR_COINS:
+        case dec.S_WAIT_FOR_COINS:
             switch (event)
             {
-            case E_10C:
-                next_state = S_DETECTED_10C;
+            case dec.E_10C:
+                dec.next_state = dec.S_DETECTED_10C;
                 break;
 
-            case E_20C:
-                next_state = S_DETECTED_20C;
+            case dec.E_20C:
+                dec.next_state = dec.S_DETECTED_20C;
                 break;
 
-            case E_50C:
-                next_state = S_DETECTED_50C;
+            case dec.E_50C:
+                dec.next_state = dec.S_DETECTED_50C;
                 break;
 
-            case E_100C:
-                next_state = S_DETECTED_100C;
+            case dec.E_100C:
+                dec.next_state = dec.S_DETECTED_100C;
                 break;
 
-            case E_BACK:
-                next_state = S_INITIALISED;
+            case dec.E_BACK:
+                dec.next_state = dec.S_INITIALISED;
                 break;
 
             default:
-                next_state = S_WAIT_FOR_COINS;
+                dec.next_state = dec.S_WAIT_FOR_COINS;
             }
             break;//end of case for money input
 
-        case S_DETECTED_10C:
+        case dec.S_DETECTED_10C:
             switch (event)
             {
-            case E_ENOUGH:
-                next_state = S_DISPENSE_CHANGE;
+            case dec.E_ENOUGH:
+                dec.next_state = dec.S_DISPENSE_CHANGE;
                 break;
-            case E_NOT_ENOUGH:
-                next_state = S_WAIT_FOR_COINS;
+            case dec.E_NOT_ENOUGH:
+                dec.next_state = dec.S_WAIT_FOR_COINS;
                 break;
             default:
                 display_show("S_10C received unknown event");
-                next_state = S_WAIT_FOR_COINS;
+                dec.next_state = dec.S_WAIT_FOR_COINS;
                 break;
             }
             break;
 
-        case S_DETECTED_20C:
+        case dec.S_DETECTED_20C:
             switch (event)
             {
-            case E_ENOUGH:
-                next_state = S_DISPENSE_CHANGE;
+            case dec.E_ENOUGH:
+                dec.next_state = dec.S_DISPENSE_CHANGE;
                 break;
 
-            case E_NOT_ENOUGH:
-                next_state = S_WAIT_FOR_COINS;
+            case dec.E_NOT_ENOUGH:
+                dec.next_state = dec.S_WAIT_FOR_COINS;
                 break;
 
             default:
                 display_show("S_DETECTED_20C received event not handled");
-                next_state = S_WAIT_FOR_COINS;
+                dec.next_state = dec.S_WAIT_FOR_COINS;
                 break;
             }
             break;
 
-        case S_DETECTED_50C:
+        case dec.S_DETECTED_50C:
             switch (event)
             {
-            case E_ENOUGH:
-                next_state = S_DISPENSE_CHANGE;
+            case dec.E_ENOUGH:
+                dec.next_state = dec.S_DISPENSE_CHANGE;
                 break;
 
-            case E_NOT_ENOUGH:
-                next_state = S_WAIT_FOR_COINS;
+            case dec.E_NOT_ENOUGH:
+                dec.next_state = dec.S_WAIT_FOR_COINS;
                 break;
 
             default:
-                display_show("S_DETECTED_50C received event "
-                             "not handled");
-                next_state = S_WAIT_FOR_COINS;
+                display_show("S_DETECTED_50C received event not handled");
+                dec.next_state = dec.S_WAIT_FOR_COINS;
                 break;
             }
             break;
 
-        case S_DETECTED_100C:
+        case dec.S_DETECTED_100C:
             switch (event)
             {
-            case E_ENOUGH:
-                next_state = S_DISPENSE_CHANGE;
+            case dec.E_ENOUGH:
+                dec.next_state = dec.S_DISPENSE_CHANGE;
                 break;
 
-            case E_NOT_ENOUGH:
-                next_state =  S_WAIT_FOR_COINS;
+            case dec.E_NOT_ENOUGH:
+                dec.next_state = dec.S_WAIT_FOR_COINS;
                 break;
 
             default:
-                display_show("S_DETECTED_100C received event "
-                             "not handled");
-                next_state = S_WAIT_FOR_COINS;
+                display_show("S_DETECTED_100C received event not handled");
+                dec.next_state = dec.S_WAIT_FOR_COINS;
                 break;
             }
             break;
 
-        case S_DISPENSE_CHANGE:
+        case dec.S_DISPENSE_CHANGE:
             switch (event){
-            case E_ENOUGH_CHANGE:
-                next_state = S_DISPENSE_COFFEE;
+            case dec.E_ENOUGH_CHANGE:
+                dec.next_state = dec.S_DISPENSE_COFFEE;
                 break;
 
-            case E_NOT_ENOUGH_CHANGE:
-                puts("The machine has been stopped");
-                puts("Ask administrator to fill change storage\n");
-                puts("Waiting for service to start\n");
-                next_state = S_SERVICE;
+            case dec.E_NOT_ENOUGH_CHANGE:
+                cout << "The machine has been stopped" << endl;
+                cout << "Ask administrator to fill change storage" << endl;
+                cout << "Waiting for service to start" << endl;
+                dec.next_state = dec.S_SERVICE;
                 break;
             }
             break;
 
-        case S_DISPENSE_COFFEE:
-            dispense_coffee(&insertedMoney);
+        case dec.S_DISPENSE_COFFEE:
+            dispense_coffee(dec.getInsertedMoney(),100);
             system("@cls||clear");
-            next_state= S_INITIALISED;
+            dec.next_state= dec.S_INITIALISED;
             break;
 
-        case S_SERVICE:
-            next_state= S_INITIALISED;
+        case dec.S_SERVICE:
+            dec.next_state = dec.S_INITIALISED;
             system("@cls||clear");
             break;
 
         }
         // ********************************Switch for Events ********************************//
-        switch(next_state){
+        switch(dec.next_state){
 
-        case S_START:
-            event= E_START;
+        case dec.S_START:
+            event = dec.E_START;
             break;
 
-        case S_INITIALISED:
+        case dec.S_INITIALISED:
             money_start();
-            event = E_CONTINUE;
+            event = dec.E_CONTINUE;
             break;
 
-        case S_COFFEE_SELECTION:
+        case dec.S_COFFEE_SELECTION:
             event = coffee_selection();
             break;
 
-        case S_WAIT_FOR_COINS:
-            puts("\n\nPlease insert some coins!");
-            event=coin_insertion();
+        case dec.S_WAIT_FOR_COINS:
+            cout << "\n\nPlease insert some coins!"<< endl;
+            event = coin_insertion();
             event = event;
             break;
 
-        case S_DETECTED_10C:
-            event= check_cents(10);
+        case dec.S_DETECTED_10C:
+            event = check_cents(10);
             break;
 
-        case S_DETECTED_20C:
-            event= check_cents(20);
+        case dec.S_DETECTED_20C:
+            event = check_cents(20);
             break;
 
-        case S_DETECTED_50C:
-            event= check_cents(50);
+        case dec.S_DETECTED_50C:
+            event = check_cents(50);
             break;
 
-        case S_DETECTED_100C:
-            event= check_cents(100);
+        case dec.S_DETECTED_100C:
+            event = check_cents(100);
             break;
 
-        case S_DISPENSE_CHANGE:
-            event=check_change();
+        case dec.S_DISPENSE_CHANGE:
+            event = check_change();
             break;
 
-        case S_DISPENSE_COFFEE:
-            subtracting_amount(&Kind_Bevrage);
+        case dec.S_DISPENSE_COFFEE:
+            subtracting_amount(dec.getKind_Bevrage());
             break;
 
-        case S_SERVICE:
+        case dec.S_SERVICE:
             service_machine();
             break;
         }
-        state = next_state;
+        state = dec.next_state;
     }
 }

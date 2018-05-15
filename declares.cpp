@@ -110,9 +110,21 @@ void Declares::setChange_Dispensed(unsigned int value)
     Change_Dispensed = value;
 }
 
-unsigned int Declares::getPrice_Cappuccino() const
+unsigned int Declares::getPricebevrage(unsigned int input) const
 {
-    return price_Cappuccino;
+    switch (input) {
+    case 0:
+        return price_Cappuccino;
+        break;
+    case 1:
+        return price_Macchiato;
+        break;
+    case 2:
+        return price_Normal_Coffee;
+        break;
+    default:
+        break;
+    }
 }
 
 void Declares::setPrice_Cappuccino(unsigned int value)
@@ -120,19 +132,9 @@ void Declares::setPrice_Cappuccino(unsigned int value)
     price_Cappuccino = value;
 }
 
-unsigned int Declares::getPrice_Macchiato() const
-{
-    return price_Macchiato;
-}
-
 void Declares::setPrice_Macchiato(unsigned int value)
 {
     price_Macchiato = value;
-}
-
-unsigned int Declares::getPrice_Normal_Coffee() const
-{
-    return price_Normal_Coffee;
 }
 
 void Declares::setPrice_Normal_Coffee(unsigned int value)
