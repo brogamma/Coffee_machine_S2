@@ -17,15 +17,14 @@ void report_writing();
 void dispense_coffee(const unsigned int *money, unsigned int moneybevrage);
 void service(void);
 void Coffee_init(void);
-
-int subtracting_amount(unsigned int *type);
-int check_change(void);
-int coffee_selection(void);
-int coin_insertion();
-int event_handler(int event);
-int check_cents(unsigned int coinValue);
-
+void event_handler(event_t event);
 void check_amount(unsigned int *type);
+
+event_t subtracting_amount(unsigned int *type);
+event_t check_change(void);
+event_t coffee_selection(void);
+event_t coin_insertion();
+event_t check_cents(unsigned int coinValue);
 
 };
 #endif // SUBSYSTEMS_H

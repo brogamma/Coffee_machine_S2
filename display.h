@@ -1,6 +1,5 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
-#define DISPLAY_SIZE_STR "72"
 
 class display
 {

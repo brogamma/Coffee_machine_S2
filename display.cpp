@@ -1,11 +1,12 @@
 #include<iostream>
+#include<string>
 #include "display.h"
 
 /*****************************display function******************************/
 
 void display_show(const char *text)
 {
-   printf("\n## %-" DISPLAY_SIZE_STR "s ##\n", text);
+   cout << text << endl;
 }
 void display::display_initialise(void)
 {
@@ -26,7 +27,7 @@ void display::keyboard_initialise(void)
 
 void display::display_debug_info(const char *text)
 {
-   printf("\n-- DEBUG      %-" DISPLAY_SIZE_STR "s\n", text);
+   cout << text << endl;
 }
 
 

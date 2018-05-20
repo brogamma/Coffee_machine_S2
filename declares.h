@@ -1,6 +1,38 @@
 #ifndef DECLARES_H
 #define DECLARES_H
 
+typedef enum {
+   S_START,
+   S_INITIALISED,
+   S_COFFEE_SELECTION,
+   S_WAIT_FOR_COINS,
+   S_DETECTED_10C,
+   S_DETECTED_20C,
+   S_DETECTED_50C,
+   S_DETECTED_100C,
+   S_DISPENSE_COFFEE,
+   S_DISPENSE_CHANGE,
+   S_SERVICE
+} state_t;
+
+/*********************The events in FSM************************/
+typedef enum {
+   E_START,
+   E_CONTINUE,
+   E_MACCHIATO,
+   E_NORMAL_COFFEE,
+   E_CUPPUCCINO,
+   E_10C,
+   E_20C,
+   E_50C,
+   E_100C,
+   E_BACK,
+   E_NOT_ENOUGH,
+   E_ENOUGH,
+   E_ENOUGH_CHANGE,
+   E_NOT_ENOUGH_CHANGE,
+   E_SERVICE
+} event_t;
 
 class Declares
 {
@@ -33,38 +65,7 @@ private:
     char Fill_Select;
 
 public:
-    typedef enum {
-       S_START,
-       S_INITIALISED,
-       S_COFFEE_SELECTION,
-       S_WAIT_FOR_COINS,
-       S_DETECTED_10C,
-       S_DETECTED_20C,
-       S_DETECTED_50C,
-       S_DETECTED_100C,
-       S_DISPENSE_COFFEE,
-       S_DISPENSE_CHANGE,
-       S_SERVICE
-    } state_t;
 
-    /*********************The events in FSM************************/
-    typedef enum {
-       E_START,
-       E_CONTINUE,
-       E_MACCHIATO,
-       E_NORMAL_COFFEE,
-       E_CUPPUCCINO,
-       E_10C,
-       E_20C,
-       E_50C,
-       E_100C,
-       E_BACK,
-       E_NOT_ENOUGH,
-       E_ENOUGH,
-       E_ENOUGH_CHANGE,
-       E_NOT_ENOUGH_CHANGE,
-       E_SERVICE
-    } event_t;
     /**************************public variabels*************************/
 
     state_t next_state;
@@ -103,7 +104,6 @@ public:
     static void setCappuccino_amount(int value);
     static void setCoffee_Ammount(int value);
     static void setChangeLeft(int value);
-
 
 };
 
