@@ -1,16 +1,36 @@
+#include <iostream>
 #include "declares.h"
 
-int Declares::getService_Sel() const
+using std::cout;
+using std::cin;
+using std::endl;
+
+void Declares::setChange(int value)
 {
-    return Service_Sel;
+    change = value;
 }
 
 void Declares::setService_Sel(int value)
 {
-    Service_Sel = value;
+     Service_Sel = value;
 }
 
-unsigned int Declares::getPasswordset() const
+void Declares::setKind_Bevrage(int value)
+{
+    Kind_Bevrage = value;
+}
+
+unsigned int Declares::getPassword_enter()
+{
+    return password_enter;
+}
+
+void Declares::setPassword_enter(unsigned int value)
+{
+    password_enter = value;
+}
+
+unsigned int Declares::getPasswordset()
 {
     return passwordset;
 }
@@ -20,14 +40,70 @@ void Declares::setPasswordset(unsigned int value)
     passwordset = value;
 }
 
-int Declares::getKind_Bevrage() const
+unsigned int Declares::getCost_bevrage()
 {
-    return Kind_Bevrage;
+    return cost_bevrage;
 }
 
-void Declares::setKind_Bevrage(int value)
+void Declares::setCost_bevrage(unsigned int value)
 {
-    Kind_Bevrage = value;
+    cost_bevrage = value;
+}
+
+unsigned int Declares::getChange_Dispensed()
+{
+    return Change_Dispensed;
+}
+
+void Declares::setChange_Dispensed(unsigned int value)
+{
+    Change_Dispensed = value;
+}
+
+unsigned int Declares::getPricebevrage(int value)
+{
+    switch (value) {
+    case 0:
+        return price_Cappuccino;
+        break;
+    case 1:
+        return price_Normal_Coffee;
+        break;
+    case 2:
+        return price_Macchiato;
+        break;
+    default:
+        cout<< "wrong slection"<< endl;
+        break;
+    }
+}
+
+void Declares::setPricebevrage(unsigned int value, int price)
+{
+    switch (value) {
+    case 0:
+        price_Cappuccino = price;
+        break;
+    case 1:
+        price_Normal_Coffee = price;
+        break;
+    case 2:
+        price_Macchiato = price;
+        break;
+    default:
+        cout<< "wrong slection"<< endl;
+        break;
+    }
+}
+
+unsigned int Declares::getInsertedMoney()
+{
+    return insertedMoney;
+}
+
+void Declares::setInsertedMoney(unsigned int value)
+{
+    insertedMoney = value;
 }
 
 unsigned int Declares::getMoney_Recieved()
@@ -40,47 +116,47 @@ void Declares::setMoney_Recieved(unsigned int value)
     Money_Recieved = value;
 }
 
-int Declares::getMacchiato_ammount()
+unsigned int Declares::getMacchiato_ammount()
 {
     return Macchiato_ammount;
 }
 
-void Declares::setMacchiato_ammount(int value)
+void Declares::setMacchiato_ammount(unsigned int value)
 {
     Macchiato_ammount = value;
 }
 
-int Declares::getCappuccino_amount()
+unsigned int Declares::getCappuccino_amount()
 {
     return Cappuccino_amount;
 }
 
-void Declares::setCappuccino_amount(int value)
+void Declares::setCappuccino_amount(unsigned int value)
 {
     Cappuccino_amount = value;
 }
 
-int Declares::getCoffee_Ammount()
+unsigned int Declares::getCoffee_Ammount()
 {
     return Coffee_Ammount;
 }
 
-void Declares::setCoffee_Ammount(int value)
+void Declares::setCoffee_Ammount(unsigned int value)
 {
     Coffee_Ammount = value;
 }
 
-int Declares::getChangeLeft()
+unsigned int Declares::getChangeLeft()
 {
     return ChangeLeft;
 }
 
-void Declares::setChangeLeft(int value)
+void Declares::setChangeLeft(unsigned int value)
 {
     ChangeLeft = value;
 }
 
-char Declares::getFill_Select() const
+char Declares::getFill_Select()
 {
     return Fill_Select;
 }
@@ -90,74 +166,17 @@ void Declares::setFill_Select(char value)
     Fill_Select = value;
 }
 
-unsigned int Declares::getInsertedMoney() const
+int Declares::getService_Sel()
 {
-    return insertedMoney;
+    return Service_Sel;
 }
 
-void Declares::setInsertedMoney(unsigned int value)
-{
-    insertedMoney = value;
-}
-
-unsigned int Declares::getChange_Dispensed() const
-{
-    return Change_Dispensed;
-}
-
-void Declares::setChange_Dispensed(unsigned int value)
-{
-    Change_Dispensed = value;
-}
-
-unsigned int Declares::getPricebevrage(unsigned int input) const
-{
-    switch (input) {
-    case 0:
-        return price_Cappuccino;
-        break;
-    case 1:
-        return price_Macchiato;
-        break;
-    case 2:
-        return price_Normal_Coffee;
-        break;
-    default:
-        break;
-    }
-}
-
-void Declares::setPrice_Cappuccino(unsigned int value)
-{
-    price_Cappuccino = value;
-}
-
-void Declares::setPrice_Macchiato(unsigned int value)
-{
-    price_Macchiato = value;
-}
-
-void Declares::setPrice_Normal_Coffee(unsigned int value)
-{
-    price_Normal_Coffee = value;
-}
-
-unsigned int Declares::getPassword_enter() const
-{
-    return password_enter;
-}
-
-void Declares::setPassword_enter(unsigned int value)
-{
-    password_enter = value;
-}
-
-int Declares::getChange() const
+int Declares::getChange()
 {
     return change;
 }
 
-void Declares::setChange(int value)
+int Declares::getKind_Bevrage()
 {
-    change = value;
+    return Kind_Bevrage;
 }

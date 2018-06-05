@@ -1,17 +1,17 @@
-//Main file that only starts the machine code
-#include <iostream>
+//#include <QApplication>
 #include <string>
-#include <stdlib.h>
-#include <unistd.h>
+#include <iostream>
 #include "declares.h"
-#include "subsystems.h"
+#include "statemachine.h"
+#include "display.h"
 
-subsystems subs;
+using namespace std;
 
-//******************Main program**************//
-int main()
+int main(int argc, char *argv[])
 {
-   subs.event_handler(E_START);
-
-return 0;
+    //QApplication a(argc, argv);
+    //Mainwindow disp;
+    //disp.show();
+    event_handler(E_START);
+    return 0 ;//a.exec()//;
 }
